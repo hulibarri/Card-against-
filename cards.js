@@ -364,7 +364,15 @@ const PACKS = {
       "Vince's big secret: _.",
       "Bekah wants _ for her birthday.",
       "~Emms just announced _ to the whole family.",
-      "~Rosie told the entire restaurant about _."
+      "~Rosie told the entire restaurant about _.",
+      "The repo man just took Blake's car. In the back seat they found _.",
+      "Blake's car got repossessed again. This time he blames _.",
+      "Why is Jen's face so red?",
+      "Karlene won again. Her cheating method this time: _.",
+      "Vince is stuck at the airport again because of _.",
+      "Vince just told the whole family that _ died. (They didn't.)",
+      "Bekah hasn't changed the oil in 70,000 miles. Her engine now runs on _.",
+      "Alix broke the car window again, this time with _."
     ],
     white: [
       "Funeral potatoes", "Green Jell-O with shredded carrots in it", "Two missionaries on bikes in a rainstorm",
@@ -380,7 +388,32 @@ const PACKS = {
       "Vince's legendary bathroom breaks", "Vince's suspicious Amazon packages", "Vince on speakerphone in public",
       "Bekah's obsession with Greek columns", "Bekah's “I'm not mad” voice", "Bekah being right, again",
       "~Emms negotiating bedtime like a lawyer", "~Emms' world-class eye roll", "~Emms running the whole family",
-      "~Rosie stealing everyone's snacks", "~Rosie bossing the grown-ups around", "~Rosie's tiny-but-mighty tantrum"
+      "~Rosie stealing everyone's snacks", "~Rosie bossing the grown-ups around", "~Rosie's tiny-but-mighty tantrum",
+      "Blake's car, now owned by the bank",
+      "Blake waving goodbye to his car from the curb",
+      "The repo man who knows Blake by name",
+      "Blake hiding his car in the neighbor's garage",
+      "Blake's car repossessed during a child support hearing",
+      "Jen's tomato-red face after a make-out session",
+      "Jen's beard burn",
+      "Jen pretending she “just got back from a run”",
+      "Karlene cheating at literally everything",
+      "Karlene's extra cards up her sleeve",
+      "Karlene flipping the DO NOT TOGGLE switch",
+      "Karlene “accidentally” peeking at everyone's cards",
+      "Karlene's very creative scorekeeping",
+      "Vince sleeping at Gate B12 for the third night",
+      "Vince's canceled, delayed, canceled again flight",
+      "Vince's airport Cinnabon diet",
+      "Vince announcing someone's death who's alive and well",
+      "Vince's premature obituaries",
+      "Grandma reading about her own funeral in Vince's text",
+      "Bekah's 70,000-mile oil change",
+      "Bekah's check engine light, on since 2019",
+      "Bekah's engine sounding like a blender full of rocks",
+      "Alix breaking the car window. Again.",
+      "Alix's frequent-customer card at the window repair shop",
+      "Duct tape and a trash bag where Alix's car window used to be"
     ]
   }
 };

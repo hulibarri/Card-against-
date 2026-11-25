@@ -1,7 +1,7 @@
 /* Cards Against Our Ulibarri Family — screens + phone-to-phone rooms.
    One phone hosts (it runs Engine and holds the game); the others connect to it with PeerJS. */
 "use strict";
-const VERSION = "1.7";
+const VERSION = "1.8";
 const App = (() => {
   const PREFIX = "cards-against-our-family-";
   const LETTERS = "ABCDEFGHJKLMNPQRSTUVWXYZ";
