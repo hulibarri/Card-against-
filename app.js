@@ -1,7 +1,7 @@
 /* Cards Against Our Ulibarri Family — screens + phone-to-phone rooms.
    One phone hosts (it runs Engine and holds the game); the others connect to it with PeerJS. */
 "use strict";
-const VERSION = "1.3";
+const VERSION = "1.4";
 const App = (() => {
   const PREFIX = "cards-against-our-family-";
   const LETTERS = "ABCDEFGHJKLMNPQRSTUVWXYZ";
@@ -223,7 +223,7 @@ const App = (() => {
       <p><b>5.</b> The Czar passes to the next person. First to the target score wins.</p>
       <p>✏️ <b>Blank cards</b> show up now and then — write whatever you want on them.</p>
       <p>🔁 <b>Bad hand?</b> Swap your whole hand for 1 point (free if you have nothing you're allowed to play).</p>
-      <p>🍼 Baby Jo Jo cards can't be played on spicy cards, and spicy cards can't be played on baby Jo Jo cards. The host can turn whole packs on or off in the lobby.</p></div>
+      <p>🥚 <b>Easter eggs</b> about the family (and a few Mormon ones) are hidden in the deck. Keep an eye out.</p><p>🧒 Cards about the kids (Jo Jo, Emms, Rosie) never get paired with dirty cards. The host can turn whole packs on or off in the lobby.</p></div>
       <button class="btn" data-a="home">Got it</button>`;
   }
 
@@ -308,7 +308,7 @@ const App = (() => {
     const cards = V.hand.map(c => {
       const i = sel.indexOf(c.id);
       const label = c.blank ? (blankText[c.id] ? esc(blankText[c.id]) : "✏️ Blank card<br><span style='font-weight:600;font-size:14px'>Tap to write your own</span>") : esc(c.t);
-      return `<button class="wc ${i >= 0 ? "sel" : ""} ${c.ok ? "" : "no"} ${c.blank ? "blk" : ""}" data-a="card" data-id="${esc(c.id)}">${label}${i >= 0 && b.pick > 1 ? `<span class="num">${i + 1}</span>` : ""}${c.ok ? "" : `<span class="note">🍼🌶️ not with this card</span>`}${c.blank && blankText[c.id] ? `<span class="note">✏️ your card</span>` : ""}</button>`;
+      return `<button class="wc ${i >= 0 ? "sel" : ""} ${c.ok ? "" : "no"} ${c.blank ? "blk" : ""}" data-a="card" data-id="${esc(c.id)}">${label}${i >= 0 && b.pick > 1 ? `<span class="num">${i + 1}</span>` : ""}${c.ok ? "" : `<span class="note">🧒🌶️ not with this card</span>`}${c.blank && blankText[c.id] ? `<span class="note">✏️ your card</span>` : ""}</button>`;
     }).join("");
     const me_ = V.players.find(p => p.id === me.id) || { score: 0 };
     const preview = sel.length ? sel.map(id => { const c = V.hand.find(h => h.id === id); return c ? (c.blank ? blankText[id] || "" : c.t) : ""; }) : null;

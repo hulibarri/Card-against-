@@ -4,8 +4,8 @@ A Cards Against Humanity–style party game for the family. Everyone plays on th
 
 Play it: https://hulibarri.github.io/Card-against-/
 
-- **Packs:** Main, Spicy 🌶️, Mormon, and Family (Taylor & baby Jo Jo). The host can turn packs on or off in the lobby.
-- Baby Jo Jo cards are never paired with spicy cards.
+- **Packs:** Main, Dirty 🌶️, and Easter eggs (family + Mormon surprises). The host can turn packs on or off in the lobby.
+- Kid cards (Jo Jo, Emms, Rosie) are never paired with dirty cards.
 - Blank cards let you write your own answers.
 - Add your own cards by editing `cards.js`. Add one line per card.
 

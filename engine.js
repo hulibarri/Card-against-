@@ -12,7 +12,7 @@ const Engine = (() => {
     return { t, pack, s, b };
   }
   Object.keys(PACKS).forEach(k => {
-    const sp = k === "spicy";
+    const sp = k === "dirty";
     PACKS[k].black.forEach(raw => {
       const c = parse(raw, k, sp);
       c.pick = Math.max(1, (c.t.match(/_/g) || []).length);
@@ -35,7 +35,7 @@ const Engine = (() => {
   function newGame(code, host){
     return {
       code, phase: "lobby", round: 0, czar: 0, target: 7, blanks: true,
-      packs: { main: true, spicy: true, mormon: true, family: true },
+      packs: { main: true, dirty: true, eggs: true },
       players: [{ id: host.id, name: host.name, score: 0, hand: [] }],
       wdeck: [], bdeck: [], black: null, subs: {}, order: [], pick: null, last: null, log: []
     };
