@@ -181,7 +181,8 @@ const Engine = (() => {
       case "swap": {
         // Trade in your whole hand: costs a point, or free if you have no legal play.
         if(O.phase !== "play" || !me || O.subs[from]) return false;
-        const free = !isCzar && !canPlayAny(O, me);
+        const cheater = (O.cheaters || []).includes(from);
+        const free = cheater || (!isCzar && !canPlayAny(O, me));
         if(!free && me.score < 1) return false;
         if(!free) me.score--;
         me.hand = []; fill(O, me);
@@ -209,9 +210,10 @@ const Engine = (() => {
         return true;
       }
       case "cheat":
-        // Unlimited points is a trap: it gives nothing, and everyone finds out.
+        // "Unlimited points" = unlimited free hand swaps, but everyone sees the cheater alert while it's on.
         if(!O.cheaters) O.cheaters = [];
         if(me && m.on && !O.cheaters.includes(from)) O.cheaters.push(from);
+        if(!m.on) O.cheaters = O.cheaters.filter(x => x !== from);
         return true;
       case "again":
         if(host && O.phase === "winner"){ O.phase = "lobby"; O.round = 0; O.black = null; O.subs = {}; O.order = []; O.last = null; O.players.forEach(p => { p.score = 0; p.hand = []; }); }

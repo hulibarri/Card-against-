@@ -1,7 +1,7 @@
 /* Cards Against Our Ulibarri Family — screens + phone-to-phone rooms.
    One phone hosts (it runs Engine and holds the game); the others connect to it with PeerJS. */
 "use strict";
-const VERSION = "1.5";
+const VERSION = "1.6";
 const App = (() => {
   const PREFIX = "cards-against-our-family-";
   const LETTERS = "ABCDEFGHJKLMNPQRSTUVWXYZ";
@@ -18,6 +18,7 @@ const App = (() => {
   let screen = "home";           // home | host | join | how | room
   let peer = null, isHost = false, code = null, O = null, V = null, conn = null;
   const conns = {};
+  const pvers = {};            // host: playerId -> app version
   let status = "", retryTimer = null, overlay = null, flash = "";
   let sel = [], blankText = {}, editing = null, lastRoundKey = "";
   const drafts = {};
@@ -36,10 +37,15 @@ const App = (() => {
     ls.set(LS_HOST, O);
     Object.keys(conns).forEach(pid => {
       const c = conns[pid];
-      if(c && c.open){ try{ c.send({ t: "state", v: Engine.viewFor(O, pid, online) }); }catch(e){} }
+      if(c && c.open){ try{ c.send({ t: "state", v: withVer(Engine.viewFor(O, pid, online)) }); }catch(e){} }
     });
-    V = Engine.viewFor(O, me.id, online);
+    V = withVer(Engine.viewFor(O, me.id, online));
     render();
+  }
+  function withVer(v){
+    v.hostVersion = VERSION;
+    v.outdated = O.players.filter(p => p.id !== me.id && conns[p.id] && conns[p.id].open && pvers[p.id] !== VERSION).map(p => p.name);
+    return v;
   }
   function hostMsg(c, m){
     if(!m || typeof m !== "object") return;
@@ -48,7 +54,7 @@ const App = (() => {
       const old = conns[m.id];
       if(old && old !== c){ try{ old.close(); }catch(e){} }
       if(Engine.addPlayer(O, m.id, m.name) === "full"){ try{ c.send({ t: "full" }); }catch(e){} return; }
-      conns[m.id] = c; c.pid = m.id;
+      conns[m.id] = c; c.pid = m.id; pvers[m.id] = typeof m.v === "string" ? m.v : "old";
       broadcast();
       return;
     }
@@ -116,7 +122,7 @@ const App = (() => {
     if(conn){ try{ conn.close(); }catch(e){} }
     const c = peer.connect(peerId(code), { reliable: true });
     conn = c;
-    c.on("open", () => { status = ""; c.send({ t: "hello", id: me.id, name: me.name }); if(ls.get(LS_CHEAT)) c.send({ t: "cheat", on: true }); render(); });
+    c.on("open", () => { status = ""; c.send({ t: "hello", id: me.id, name: me.name, v: VERSION }); if(ls.get(LS_CHEAT)) c.send({ t: "cheat", on: true }); render(); });
     c.on("data", m => {
       if(!m) return;
       if(m.t === "state"){ V = m.v; render(); }
@@ -171,9 +177,17 @@ const App = (() => {
     if(!b.t.includes("_")) return `${esc(b.t)} <span class="fill">${cards.map(c => esc(c)).join(" / ")}</span>`;
     return esc(b.t).replace(/_/g, () => `<span class="fill">${esc(trimEnd(cards[i++] || ""))}</span>`);
   }
-  const bar = () => `<div class="bar"><span class="meta">Room <b>${esc(code)}</b>${V && V.round ? " · Round " + V.round : ""}</span><button class="iconbtn" data-a="menu" aria-label="Menu">☰</button></div>${cheatBanner()}`;
+  const bar = () => `<div class="bar"><span class="meta">Room <b>${esc(code)}</b>${V && V.round ? " · Round " + V.round : ""}</span><button class="iconbtn" data-a="menu" aria-label="Menu">☰</button></div>${verBanner()}${cheatBanner()}`;
   const statusBox = () => status ? `<div class="err">${esc(status)}</div>` : "";
   const isCheater = id => !!(V && V.cheaters && V.cheaters.includes(id));
+  function verBanner(){
+    if(!V) return "";
+    if(!isHost && V.hostVersion !== VERSION)
+      return `<div class="verwarn">⚠️ Version mismatch — the host has ${esc(V.hostVersion || "an older version")}, you have ${VERSION}. Everyone needs the same version or things break.<button class="btn small" data-a="update">⟳ Update my app</button></div>`;
+    if(isHost && V.outdated && V.outdated.length)
+      return `<div class="verwarn">⚠️ ${esc(V.outdated.join(", "))} ${V.outdated.length > 1 ? "need" : "needs"} to update (you have ${VERSION}). Tell them: ⚙️ → Update app.</div>`;
+    return "";
+  }
   function cheatBanner(){
     if(!V || !V.cheaters || !V.cheaters.length) return "";
     const names = V.cheaters.map(id => id === me.id ? "YOU" : nm(id));
@@ -238,7 +252,7 @@ const App = (() => {
     return `<div class="bar"><button class="iconbtn" data-a="back" aria-label="Back">‹</button><span></span></div>
       <h1>Settings</h1>
       <button class="toggle" data-a="cheat" style="border:2px solid #ff3b3b"><span><b style="color:#ff3b3b">DO NOT TOGGLE</b><small>Unlimited points</small></span><span class="sw ${cheat ? "on" : ""}" style="${cheat ? "background:#ff3b3b" : ""}"></span></button>
-      ${cheat ? `<div class="err">😬 ${code ? "Everyone in the game has been told you're a cheater. Turning it off won't fix that." : "The next game you join, everyone will know you're a cheater."}</div>` : ""}
+      ${cheat ? `<div class="err">😬 ${code ? "Unlimited free hand swaps are on — and everyone can see you're cheating. Turn it off to make the warning go away." : "Unlimited free hand swaps are on. The next game you join, everyone will know you're cheating."}</div>` : ""}
       <div class="status">App version <b>${VERSION}</b>${upd.latest ? `<br>Latest version: <b>${esc(upd.latest)}</b>` : ""}</div>
       ${upd.msg ? `<div class="${upd.err ? "err" : "status"}">${esc(upd.msg)}</div>` : ""}
       <button class="btn gold" data-a="update" ${upd.busy ? "disabled" : ""}>${upd.busy ? "Updating…" : "⟳ Update app"}</button>
@@ -328,7 +342,8 @@ const App = (() => {
       <p class="sub" style="margin:12px 0 0">${b.pick > 1 ? `Pick <b>${b.pick}</b> cards in order.` : "Pick your funniest card."}</p>
       ${!V.canPlay ? `<div class="err">Nothing in your hand works with this card — swap your hand for free.</div>` : ""}
       <div class="hand">${cards}</div>
-      <button class="btn ghost small" data-a="swap" style="margin-top:16px" ${V.canPlay && me_.score < 1 ? "disabled" : ""}>🔁 Swap my whole hand ${V.canPlay ? "(costs 1 point)" : "(free)"}</button>
+      ${isCheater(me.id) ? `<button class="btn small" data-a="swap" style="margin-top:16px;background:#c8102e;color:#fff">🔁 Swap my whole hand (free — cheater 😈)</button>`
+        : `<button class="btn ghost small" data-a="swap" style="margin-top:16px" ${V.canPlay && me_.score < 1 ? "disabled" : ""}>🔁 Swap my whole hand ${V.canPlay ? "(costs 1 point)" : "(free)"}</button>`}
       <div class="sticky"><div class="in"><button class="btn gold" data-a="play" ${ready ? "" : "disabled"}>${sel.length < b.pick ? (b.pick > 1 ? `Pick ${b.pick - sel.length} more` : "Pick a card") : "Play " + (b.pick > 1 ? "these cards" : "this card")}</button></div></div>`;
   }
 
@@ -454,8 +469,8 @@ const App = (() => {
       case "back": screen = code ? "room" : "home"; render(); break;
       case "cheat": {
         const on = !ls.get(LS_CHEAT);
-        if(on){ ls.set(LS_CHEAT, true); if(code) send({ t: "cheat", on: true }); }
-        else ls.del(LS_CHEAT);
+        if(on) ls.set(LS_CHEAT, true); else ls.del(LS_CHEAT);
+        if(code) send({ t: "cheat", on });
         render(); break;
       }
       case "checkUpdate": checkUpdate(); break;
@@ -520,7 +535,7 @@ const App = (() => {
       }
       case "unplay": send({ t: "unplay" }); break;
       case "swap":
-        if(V.canPlay && !confirm("Swap your whole hand for 1 point?")) break;
+        if(V.canPlay && !isCheater(me.id) && !confirm("Swap your whole hand for 1 point?")) break;
         sel = []; send({ t: "swap" }); break;
       case "skip": send({ t: "skip" }); break;
       case "judgeNow":
