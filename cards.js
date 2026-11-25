@@ -1,4 +1,4 @@
-/* Cards Against Our Family — the decks.
+/* Cards Against Our Ulibarri Family — the decks.
    Black cards: "_" marks a blank. The number of blanks is how many white cards you play (a question with no blank = 1).
    Flags at the start of a card:  "!" = spicy   "~" = baby (baby cards never get paired with spicy cards).
    Every card in the Spicy pack counts as spicy automatically.

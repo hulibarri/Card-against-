@@ -1,4 +1,4 @@
-/* Cards Against Our Family — game rules. Runs only on the host's phone.
+/* Cards Against Our Ulibarri Family — game rules. Runs only on the host's phone.
    No DOM in here, so it can be tested on its own. */
 "use strict";
 const Engine = (() => {

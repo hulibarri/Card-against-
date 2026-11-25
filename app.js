@@ -1,7 +1,7 @@
-/* Cards Against Our Family — screens + phone-to-phone rooms.
+/* Cards Against Our Ulibarri Family — screens + phone-to-phone rooms.
    One phone hosts (it runs Engine and holds the game); the others connect to it with PeerJS. */
 "use strict";
-const VERSION = "1.0";
+const VERSION = "1.1";
 const App = (() => {
   const PREFIX = "cards-against-our-family-";
   const LETTERS = "ABCDEFGHJKLMNPQRSTUVWXYZ";
@@ -183,7 +183,7 @@ const App = (() => {
   function home(){
     const h = ls.get(LS_HOST), c = ls.get(LS_CLIENT);
     return `
-      <div class="logo"><div class="c k">Cards Against Our ______.</div><div class="c w">Family.</div></div>
+      <div class="logo"><div class="c k">Cards Against Our ______.</div><div class="c w">Ulibarri Family.</div></div>
       <p class="tag">A horrible game for horrible families. Everyone plays on their own phone.</p>
       ${flash ? `<div class="err">${esc(flash)}</div>` : ""}
       ${h && h.code ? `<button class="btn gold" data-a="resume">Reopen your room ${esc(h.code)}</button>` : ""}
@@ -342,7 +342,7 @@ const App = (() => {
       ${hist ? `<h2>Round winners</h2>${hist}` : ""}
       <button class="btn ghost small" data-a="leave" style="margin-top:18px">${isHost ? "Close room" : "Leave room"}</button>
       <button class="btn small" data-a="closeOv">Done</button>
-      <div class="ver">Cards Against Our Family · Version ${VERSION}</div>
+      <div class="ver">Cards Against Our Ulibarri Family · Version ${VERSION}</div>
     </div></div>`;
   }
   function editSheet(){
@@ -385,8 +385,8 @@ const App = (() => {
     me.name = n; ls.set(LS_ME, me); return true;
   }
   function share(){
-    const text = `Join my Cards Against Our Family game! Room code ${code}`;
-    if(navigator.share) navigator.share({ title: "Cards Against Our Family", text, url: inviteLink() }).catch(() => {});
+    const text = `Join my Cards Against Our Ulibarri Family game! Room code ${code}`;
+    if(navigator.share) navigator.share({ title: "Cards Against Our Ulibarri Family", text, url: inviteLink() }).catch(() => {});
     else if(navigator.clipboard) navigator.clipboard.writeText(text + " " + inviteLink()).then(() => { alertish("Invite link copied!"); });
   }
   function alertish(t){ status = t; render(); setTimeout(() => { if(status === t){ status = ""; render(); } }, 1800); }
