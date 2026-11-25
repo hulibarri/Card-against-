@@ -372,7 +372,13 @@ const PACKS = {
       "Vince is stuck at the airport again because of _.",
       "Vince just told the whole family that _ died. (They didn't.)",
       "Bekah hasn't changed the oil in 70,000 miles. Her engine now runs on _.",
-      "Alix broke the car window again, this time with _."
+      "Alix broke the car window again, this time with _.",
+      "Vince got caught sneaking into Karlene's room again. His excuse: _.",
+      "They've been divorced for years, but Vince still shows up at Karlene's door with _.",
+      "What did Karlene find hiding in her closet this time?",
+      "Vince's master plan to sneak into Karlene's room: Step 1: _. Step 2: _.",
+      "Karlene changed the locks again, so now Vince is trying _.",
+      "What's Vince's code name for sneaking into Karlene's room?"
     ],
     white: [
       "Funeral potatoes", "Green Jell-O with shredded carrots in it", "Two missionaries on bikes in a rainstorm",
@@ -413,7 +419,23 @@ const PACKS = {
       "Bekah's engine sounding like a blender full of rocks",
       "Alix breaking the car window. Again.",
       "Alix's frequent-customer card at the window repair shop",
-      "Duct tape and a trash bag where Alix's car window used to be"
+      "Duct tape and a trash bag where Alix's car window used to be",
+      "Vince army-crawling down the hallway toward Karlene's room",
+      "Vince stuck halfway through Karlene's window",
+      "Vince “sleepwalking” into Karlene's room for the fifth time",
+      "Vince hiding under Karlene's bed",
+      "Vince knocking on Karlene's door at 2 a.m. with a rose in his teeth",
+      "Karlene's motion-sensor alarm with Vince's name on it",
+      "Vince claiming he got lost on the way to the bathroom",
+      "Vince serenading Karlene's door on a ukulele",
+      "Vince's ladder propped against Karlene's window",
+      "Karlene's restraining-order-shaped doormat",
+      "Vince disguised as room service",
+      "Vince wearing night-vision goggles in the hallway",
+      "Karlene booby-trapping her doorway with Legos",
+      "Vince's “we're divorced, not dead” speech",
+      "Karlene's ex-husband detector",
+      "Vince oiling the hinges on Karlene's door for a silent entry"
     ]
   }
 };
