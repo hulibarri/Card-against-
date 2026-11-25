@@ -1,7 +1,7 @@
 /* Cards Against Our Ulibarri Family — screens + phone-to-phone rooms.
    One phone hosts (it runs Engine and holds the game); the others connect to it with PeerJS. */
 "use strict";
-const VERSION = "1.1";
+const VERSION = "1.2";
 const App = (() => {
   const PREFIX = "cards-against-our-family-";
   const LETTERS = "ABCDEFGHJKLMNPQRSTUVWXYZ";
@@ -215,7 +215,7 @@ const App = (() => {
   function howScreen(){
     return `<div class="bar"><button class="iconbtn" data-a="home" aria-label="Back">‹</button><span></span></div>
       <div class="howto"><h1>How to play</h1>
-      <p><b>1.</b> One person hosts and everyone joins on their own phone. 3 players minimum — it's best with 7 or more (up to 20).</p>
+      <p><b>1.</b> One person hosts and everyone joins on their own phone. 2 players minimum — it's best with 7 or more (up to 20).</p>
       <p><b>2.</b> Each round, one player is the <b>👑 Card Czar</b>. They read the black card out loud.</p>
       <p><b>3.</b> Everyone else picks the funniest white card from their hand (or two, if it says PICK 2 — in order) and taps <b>Play</b>.</p>
       <p><b>4.</b> When all cards are in, the Czar reads every answer out loud and crowns a favorite. That player gets a point.</p>
@@ -234,12 +234,12 @@ const App = (() => {
       <div class="code">${esc(code)}</div>
       <button class="btn ghost small" data-a="share">📨 Send invite link</button>
       <h2>Players (${n})</h2>${scoreList(true)}
-      ${n < 7 ? `<p class="sub" style="margin-top:10px">${n < 3 ? "Need at least 3 players to start." : "Ready to go — but it's best with 7 or more."}</p>` : ""}
+      ${n < 7 ? `<p class="sub" style="margin-top:10px">${n < 2 ? "Need at least 2 players to start." : "Ready to go — but it's best with 7 or more."}</p>` : ""}
       <h2>Packs</h2>${packs}
       <button class="toggle" data-a="blanks" ${isHost ? "" : "disabled"}><span><b>Blank cards</b><small>Occasionally get a card you write yourself</small></span><span class="sw ${V.blanks ? "on" : ""}"></span></button>
       <h2>Points to win</h2>
       <div class="stepper"><span>First to</span><span style="display:flex;align-items:center">${isHost ? `<button data-a="target" data-d="-1">−</button>` : ""}<b>${V.target}</b>${isHost ? `<button data-a="target" data-d="1">+</button>` : ""}</span></div>
-      <div class="sticky"><div class="in">${isHost ? `<button class="btn gold" data-a="start" ${n < 3 ? "disabled" : ""}>Start game</button>` : `<div class="status center">Waiting for the host to start…</div>`}</div></div>`;
+      <div class="sticky"><div class="in">${isHost ? `<button class="btn gold" data-a="start" ${n < 2 ? "disabled" : ""}>Start game</button>` : `<div class="status center">Waiting for the host to start…</div>`}</div></div>`;
   }
 
   function playScreen(){

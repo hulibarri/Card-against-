@@ -117,7 +117,7 @@ const Engine = (() => {
     if(idx < O.czar) O.czar--;
     if(O.czar >= O.players.length) O.czar = 0;
     if(O.phase === "lobby" || O.phase === "winner") return;
-    if(O.players.length < 3){ O.phase = "lobby"; O.round = 0; return; }
+    if(O.players.length < 2){ O.phase = "lobby"; O.round = 0; return; }
     if(wasCzar && (O.phase === "play" || O.phase === "judge")){
       // Give played cards back, then start over with the next czar.
       returnSubs(O);
@@ -144,7 +144,7 @@ const Engine = (() => {
         } return true;
       case "blanks": if(host && O.phase === "lobby") O.blanks = !O.blanks; return true;
       case "start":
-        if(host && O.phase === "lobby" && O.players.length >= 3){
+        if(host && O.phase === "lobby" && O.players.length >= 2){
           reshuffleDecks(O);
           O.players.forEach(p => { p.score = 0; p.hand = []; });
           O.players.forEach(p => fill(O, p));
