@@ -37,7 +37,7 @@ const Engine = (() => {
       code, phase: "lobby", round: 0, czar: 0, target: 7, blanks: true,
       packs: { main: true, dirty: true, eggs: true },
       players: [{ id: host.id, name: host.name, score: 0, hand: [] }],
-      wdeck: [], bdeck: [], black: null, subs: {}, order: [], pick: null, last: null, log: []
+      wdeck: [], bdeck: [], black: null, subs: {}, order: [], pick: null, last: null, log: [], cheaters: []
     };
   }
   const enabled = O => Object.keys(O.packs).filter(k => O.packs[k] && PACKS[k]);
@@ -208,6 +208,11 @@ const Engine = (() => {
         startRound(O);
         return true;
       }
+      case "cheat":
+        // Unlimited points is a trap: it gives nothing, and everyone finds out.
+        if(!O.cheaters) O.cheaters = [];
+        if(me && m.on && !O.cheaters.includes(from)) O.cheaters.push(from);
+        return true;
       case "again":
         if(host && O.phase === "winner"){ O.phase = "lobby"; O.round = 0; O.black = null; O.subs = {}; O.order = []; O.last = null; O.players.forEach(p => { p.score = 0; p.hand = []; }); }
         return true;
@@ -249,7 +254,8 @@ const Engine = (() => {
       mine: O.subs[id] ? O.subs[id].map(c => c.t) : null,
       need: playersIn(O).length, have: Object.keys(O.subs).length,
       canPlay: me && O.black ? canPlayAny(O, me) : true,
-      log: O.log.slice(0, 15)
+      log: O.log.slice(0, 15),
+      cheaters: (O.cheaters || []).filter(cid => O.players.some(p => p.id === cid))
     };
     if(O.phase === "judge") v.subs = O.order.map(sid => ({ id: sid, cards: O.subs[sid].map(c => c.t) })), v.sel = O.pick;
     if(O.phase === "result" || O.phase === "winner") v.last = O.last;

@@ -1,11 +1,11 @@
 /* Cards Against Our Ulibarri Family — screens + phone-to-phone rooms.
    One phone hosts (it runs Engine and holds the game); the others connect to it with PeerJS. */
 "use strict";
-const VERSION = "1.4";
+const VERSION = "1.5";
 const App = (() => {
   const PREFIX = "cards-against-our-family-";
   const LETTERS = "ABCDEFGHJKLMNPQRSTUVWXYZ";
-  const LS_ME = "caf_me", LS_HOST = "caf_host", LS_CLIENT = "caf_client";
+  const LS_ME = "caf_me", LS_HOST = "caf_host", LS_CLIENT = "caf_client", LS_CHEAT = "caf_cheat";
   const ls = {
     get(k){ try{ return JSON.parse(localStorage.getItem(k)); }catch(e){ return null; } },
     set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} },
@@ -70,7 +70,7 @@ const App = (() => {
     render();
     if(typeof Peer === "undefined"){ status = "Couldn't load the connection library. Check your internet and reload."; render(); return; }
     peer = new Peer(peerId(code), peerOpts());
-    peer.on("open", () => { status = ""; broadcast(); });
+    peer.on("open", () => { status = ""; if(ls.get(LS_CHEAT)) Engine.act(O, me.id, { t: "cheat", on: true }, me.id); broadcast(); });
     peer.on("connection", c => {
       c.on("data", m => hostMsg(c, m));
       c.on("close", () => { if(c.pid && conns[c.pid] === c){ delete conns[c.pid]; broadcast(); } });
@@ -116,7 +116,7 @@ const App = (() => {
     if(conn){ try{ conn.close(); }catch(e){} }
     const c = peer.connect(peerId(code), { reliable: true });
     conn = c;
-    c.on("open", () => { status = ""; c.send({ t: "hello", id: me.id, name: me.name }); render(); });
+    c.on("open", () => { status = ""; c.send({ t: "hello", id: me.id, name: me.name }); if(ls.get(LS_CHEAT)) c.send({ t: "cheat", on: true }); render(); });
     c.on("data", m => {
       if(!m) return;
       if(m.t === "state"){ V = m.v; render(); }
@@ -171,11 +171,17 @@ const App = (() => {
     if(!b.t.includes("_")) return `${esc(b.t)} <span class="fill">${cards.map(c => esc(c)).join(" / ")}</span>`;
     return esc(b.t).replace(/_/g, () => `<span class="fill">${esc(trimEnd(cards[i++] || ""))}</span>`);
   }
-  const bar = () => `<div class="bar"><span class="meta">Room <b>${esc(code)}</b>${V && V.round ? " · Round " + V.round : ""}</span><button class="iconbtn" data-a="menu" aria-label="Menu">☰</button></div>`;
+  const bar = () => `<div class="bar"><span class="meta">Room <b>${esc(code)}</b>${V && V.round ? " · Round " + V.round : ""}</span><button class="iconbtn" data-a="menu" aria-label="Menu">☰</button></div>${cheatBanner()}`;
   const statusBox = () => status ? `<div class="err">${esc(status)}</div>` : "";
+  const isCheater = id => !!(V && V.cheaters && V.cheaters.includes(id));
+  function cheatBanner(){
+    if(!V || !V.cheaters || !V.cheaters.length) return "";
+    const names = V.cheaters.map(id => id === me.id ? "YOU" : nm(id));
+    return `<div class="cheat">🚨 CHEATER ALERT 🚨<br><span>${esc(names.join(" & "))} turned on unlimited points!</span></div>`;
+  }
   function scoreList(kick){
     const ps = V.players.slice().sort((a, b) => b.score - a.score);
-    return `<div class="list">${ps.map(p => `<div class="row"><span>${p.czar ? "👑 " : ""}${esc(p.name)}${p.id === me.id ? " (you)" : ""}${p.online ? "" : ' <span style="color:#777;font-size:13px">· offline</span>'}</span>
+    return `<div class="list">${ps.map(p => `<div class="row"><span>${p.czar ? "👑 " : ""}${isCheater(p.id) ? "🚨 " : ""}${esc(p.name)}${p.id === me.id ? " (you)" : ""}${isCheater(p.id) ? ' <span style="color:#ff4d4d;font-weight:800;font-size:13px">CHEATER</span>' : ""}${p.online ? "" : ' <span style="color:#777;font-size:13px">· offline</span>'}</span>
       <span>${kick && isHost && p.id !== me.id ? `<button class="x" data-a="kick" data-id="${esc(p.id)}">Remove</button> ` : ""}<span class="sc">${p.score}</span></span></div>`).join("")}</div>`;
   }
 
@@ -228,8 +234,11 @@ const App = (() => {
   }
 
   function settingsScreen(){
-    return `<div class="bar"><button class="iconbtn" data-a="home" aria-label="Back">‹</button><span></span></div>
+    const cheat = !!ls.get(LS_CHEAT);
+    return `<div class="bar"><button class="iconbtn" data-a="back" aria-label="Back">‹</button><span></span></div>
       <h1>Settings</h1>
+      <button class="toggle" data-a="cheat" style="border:2px solid #ff3b3b"><span><b style="color:#ff3b3b">DO NOT TOGGLE</b><small>Unlimited points</small></span><span class="sw ${cheat ? "on" : ""}" style="${cheat ? "background:#ff3b3b" : ""}"></span></button>
+      ${cheat ? `<div class="err">😬 ${code ? "Everyone in the game has been told you're a cheater. Turning it off won't fix that." : "The next game you join, everyone will know you're a cheater."}</div>` : ""}
       <div class="status">App version <b>${VERSION}</b>${upd.latest ? `<br>Latest version: <b>${esc(upd.latest)}</b>` : ""}</div>
       ${upd.msg ? `<div class="${upd.err ? "err" : "status"}">${esc(upd.msg)}</div>` : ""}
       <button class="btn gold" data-a="update" ${upd.busy ? "disabled" : ""}>${upd.busy ? "Updating…" : "⟳ Update app"}</button>
@@ -264,7 +273,7 @@ const App = (() => {
       await Promise.all(FILES.map(f => fetch(f, { cache: "reload" }).catch(() => {})));
       try{ upd.latest = await latestVersion(); }catch(e){}
     }catch(e){}
-    ls.set("caf_after_update", { screen: screen === "room" ? "room" : "settings" });
+    ls.set("caf_after_update", { screen: code ? "room" : "settings" });
     location.replace(location.pathname + "?u=" + Date.now());
   }
 
@@ -384,7 +393,7 @@ const App = (() => {
       ${hist ? `<h2>Round winners</h2>${hist}` : ""}
       <button class="btn ghost small" data-a="leave" style="margin-top:18px">${isHost ? "Close room" : "Leave room"}</button>
       <button class="btn small" data-a="closeOv">Done</button>
-      <button class="link" data-a="update">⟳ Update app (version ${VERSION})</button>
+      <button class="link" data-a="goSettings">⚙️ Settings · version ${VERSION}</button>
       <div class="ver">Cards Against Our Ulibarri Family · Version ${VERSION}</div>
     </div></div>`;
   }
@@ -441,7 +450,14 @@ const App = (() => {
       case "goHost": flash = ""; screen = "host"; render(); break;
       case "goJoin": flash = ""; screen = "join"; render(); break;
       case "goHow": screen = "how"; render(); break;
-      case "goSettings": overlay = null; if(screen === "room"){ if(!confirm("Leave the game screen to open Settings? You can come back from the home screen.")) break; } screen = "settings"; upd.msg = ""; render(); checkUpdate(); break;
+      case "goSettings": overlay = null; screen = "settings"; upd.msg = ""; render(); checkUpdate(); break;
+      case "back": screen = code ? "room" : "home"; render(); break;
+      case "cheat": {
+        const on = !ls.get(LS_CHEAT);
+        if(on){ ls.set(LS_CHEAT, true); if(code) send({ t: "cheat", on: true }); }
+        else ls.del(LS_CHEAT);
+        render(); break;
+      }
       case "checkUpdate": checkUpdate(); break;
       case "update": doUpdate(); break;
       case "create":
