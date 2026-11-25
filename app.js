@@ -1,7 +1,7 @@
 /* Cards Against Our Ulibarri Family — screens + phone-to-phone rooms.
    One phone hosts (it runs Engine and holds the game); the others connect to it with PeerJS. */
 "use strict";
-const VERSION = "1.6";
+const VERSION = "1.7";
 const App = (() => {
   const PREFIX = "cards-against-our-family-";
   const LETTERS = "ABCDEFGHJKLMNPQRSTUVWXYZ";
@@ -20,7 +20,7 @@ const App = (() => {
   const conns = {};
   const pvers = {};            // host: playerId -> app version
   let status = "", retryTimer = null, overlay = null, flash = "";
-  let sel = [], blankText = {}, editing = null, lastRoundKey = "";
+  let sel = [], blankText = {}, editing = null, lastRoundKey = "", lastViewKey = "";
   const drafts = {};
 
   const $app = document.getElementById("app");
@@ -402,13 +402,14 @@ const App = (() => {
   function menuSheet(){
     const hist = (V && V.log || []).map(l => `<div class="hist"><b>${esc(nm(l.winner))}</b> · round ${l.round}<br>${comboText({ t: l.black }, l.cards)}</div>`).join("");
     return `<div class="overlay" data-a="closeOv"><div class="sheet" data-stop="1">
+      <div style="display:flex;gap:8px;margin-bottom:6px"><button class="btn ghost small" data-a="goSettings" style="margin:0">⚙️ Settings</button><button class="btn small" data-a="closeOv" style="margin:0">Done</button></div>
       ${V && V.phase !== "lobby" ? `<h2 style="margin-top:4px">Scores · first to ${V.target}</h2>${scoreList(true)}` : `<h2 style="margin-top:4px">Room ${esc(code)}</h2>`}
       <button class="btn ghost small" data-a="share">📨 Invite someone (room ${esc(code)})</button>
       ${isHost && V && V.phase !== "lobby" ? `<button class="btn ghost small" data-a="toLobby">Back to lobby (ends this game)</button>` : ""}
       ${hist ? `<h2>Round winners</h2>${hist}` : ""}
       <button class="btn ghost small" data-a="leave" style="margin-top:18px">${isHost ? "Close room" : "Leave room"}</button>
       <button class="btn small" data-a="closeOv">Done</button>
-      <button class="link" data-a="goSettings">⚙️ Settings · version ${VERSION}</button>
+
       <div class="ver">Cards Against Our Ulibarri Family · Version ${VERSION}</div>
     </div></div>`;
   }
@@ -441,7 +442,14 @@ const App = (() => {
     else html = home();
     if(screen === "room" && overlay === "menu") html += menuSheet();
     if(screen === "room" && editing) html += editSheet();
+    // Keep scroll positions (page and any open sheet) when other players' actions redraw the screen.
+    const sheet = document.querySelector(".sheet"), sheetTop = sheet ? sheet.scrollTop : 0, pageY = window.scrollY;
     $app.innerHTML = html;
+    const sheet2 = document.querySelector(".sheet");
+    if(sheet && sheet2) sheet2.scrollTop = sheetTop;
+    const viewKey = screen + ":" + (V ? V.phase + ":" + V.round : "");
+    if(viewKey !== lastViewKey){ lastViewKey = viewKey; window.scrollTo(0, 0); }
+    else if(Math.abs(window.scrollY - pageY) > 1) window.scrollTo(0, pageY);
     if(focusId){ const el = document.getElementById(focusId); if(el){ el.focus(); try{ el.setSelectionRange(s0, s1); }catch(e){} } }
   }
 
