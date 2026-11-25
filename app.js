@@ -1,7 +1,7 @@
 /* Cards Against Our Ulibarri Family — screens + phone-to-phone rooms.
    One phone hosts (it runs Engine and holds the game); the others connect to it with PeerJS. */
 "use strict";
-const VERSION = "1.2";
+const VERSION = "1.3";
 const App = (() => {
   const PREFIX = "cards-against-our-family-";
   const LETTERS = "ABCDEFGHJKLMNPQRSTUVWXYZ";
@@ -182,8 +182,8 @@ const App = (() => {
   /* =================== SCREENS =================== */
   function home(){
     const h = ls.get(LS_HOST), c = ls.get(LS_CLIENT);
-    return `
-      <div class="logo"><div class="c k">Cards Against Our ______.</div><div class="c w">Ulibarri Family.</div></div>
+    return `<div class="bar"><span></span><button class="iconbtn" data-a="goSettings" aria-label="Settings">⚙️</button></div>
+      <div class="logo" style="margin-top:10px"><div class="c k">Cards Against Our ______.</div><div class="c w">Ulibarri Family.</div></div>
       <p class="tag">A horrible game for horrible families. Everyone plays on their own phone.</p>
       ${flash ? `<div class="err">${esc(flash)}</div>` : ""}
       ${h && h.code ? `<button class="btn gold" data-a="resume">Reopen your room ${esc(h.code)}</button>` : ""}
@@ -191,6 +191,7 @@ const App = (() => {
       <button class="btn" data-a="goHost">Host a game</button>
       <button class="btn ghost" data-a="goJoin">Join a game</button>
       <button class="link" data-a="goHow">How to play</button>
+      <button class="link" data-a="goSettings" style="margin-top:0">Settings</button>
       <div class="ver">Version ${VERSION} · ${Engine.BLACK.length} black cards · ${Engine.WHITE.length} white cards</div>`;
   }
   function hostScreen(){
@@ -224,6 +225,47 @@ const App = (() => {
       <p>🔁 <b>Bad hand?</b> Swap your whole hand for 1 point (free if you have nothing you're allowed to play).</p>
       <p>🍼 Baby Jo Jo cards can't be played on spicy cards, and spicy cards can't be played on baby Jo Jo cards. The host can turn whole packs on or off in the lobby.</p></div>
       <button class="btn" data-a="home">Got it</button>`;
+  }
+
+  function settingsScreen(){
+    return `<div class="bar"><button class="iconbtn" data-a="home" aria-label="Back">‹</button><span></span></div>
+      <h1>Settings</h1>
+      <div class="status">App version <b>${VERSION}</b>${upd.latest ? `<br>Latest version: <b>${esc(upd.latest)}</b>` : ""}</div>
+      ${upd.msg ? `<div class="${upd.err ? "err" : "status"}">${esc(upd.msg)}</div>` : ""}
+      <button class="btn gold" data-a="update" ${upd.busy ? "disabled" : ""}>${upd.busy ? "Updating…" : "⟳ Update app"}</button>
+      <button class="btn ghost small" data-a="checkUpdate" ${upd.busy ? "disabled" : ""}>Check for updates</button>
+      <p class="sub" style="margin-top:14px">Update downloads the newest version of the game and reloads. If you're hosting a game, your room reopens after.</p>
+      <h2>Your name</h2>
+      <p class="sub">${me.name ? esc(me.name) : "Not set yet"} — you can change it when you host or join.</p>
+      <div class="ver">Cards Against Our Ulibarri Family · Version ${VERSION}</div>`;
+  }
+
+  /* =================== UPDATES =================== */
+  const upd = { latest: null, msg: "", err: false, busy: false };
+  const FILES = ["index.html", "app.js", "engine.js", "cards.js", "manifest.json", "version.json"];
+  async function latestVersion(){
+    const r = await fetch("version.json?t=" + Date.now(), { cache: "no-store" });
+    if(!r.ok) throw new Error("bad response");
+    return (await r.json()).version;
+  }
+  const newer = (a, b) => { const x = String(a).split(".").map(Number), y = String(b).split(".").map(Number); for(let i = 0; i < Math.max(x.length, y.length); i++){ if((x[i] || 0) !== (y[i] || 0)) return (x[i] || 0) > (y[i] || 0); } return false; };
+  async function checkUpdate(){
+    upd.busy = true; upd.msg = "Checking…"; upd.err = false; render();
+    try{
+      upd.latest = await latestVersion();
+      upd.msg = newer(upd.latest, VERSION) ? `Version ${upd.latest} is available — tap Update app.` : "You're on the latest version.";
+    }catch(e){ upd.msg = "Couldn't check right now. Make sure you're online."; upd.err = true; }
+    upd.busy = false; render();
+  }
+  async function doUpdate(){
+    upd.busy = true; upd.msg = "Downloading the newest version…"; upd.err = false; render();
+    try{
+      // Refetch every file past the browser cache so the reload picks up the new copies.
+      await Promise.all(FILES.map(f => fetch(f, { cache: "reload" }).catch(() => {})));
+      try{ upd.latest = await latestVersion(); }catch(e){}
+    }catch(e){}
+    ls.set("caf_after_update", { screen: screen === "room" ? "room" : "settings" });
+    location.replace(location.pathname + "?u=" + Date.now());
   }
 
   function lobby(){
@@ -342,6 +384,7 @@ const App = (() => {
       ${hist ? `<h2>Round winners</h2>${hist}` : ""}
       <button class="btn ghost small" data-a="leave" style="margin-top:18px">${isHost ? "Close room" : "Leave room"}</button>
       <button class="btn small" data-a="closeOv">Done</button>
+      <button class="link" data-a="update">⟳ Update app (version ${VERSION})</button>
       <div class="ver">Cards Against Our Ulibarri Family · Version ${VERSION}</div>
     </div></div>`;
   }
@@ -370,6 +413,7 @@ const App = (() => {
     else if(screen === "host") html = hostScreen();
     else if(screen === "join") html = joinScreen();
     else if(screen === "how") html = howScreen();
+    else if(screen === "settings") html = settingsScreen();
     else html = home();
     if(screen === "room" && overlay === "menu") html += menuSheet();
     if(screen === "room" && editing) html += editSheet();
@@ -397,6 +441,9 @@ const App = (() => {
       case "goHost": flash = ""; screen = "host"; render(); break;
       case "goJoin": flash = ""; screen = "join"; render(); break;
       case "goHow": screen = "how"; render(); break;
+      case "goSettings": overlay = null; if(screen === "room"){ if(!confirm("Leave the game screen to open Settings? You can come back from the home screen.")) break; } screen = "settings"; upd.msg = ""; render(); checkUpdate(); break;
+      case "checkUpdate": checkUpdate(); break;
+      case "update": doUpdate(); break;
       case "create":
         if(!setName()) break;
         flash = ""; isHost = true; code = genCode();
@@ -484,8 +531,19 @@ const App = (() => {
     if(screen === "host") act("create"); else if(screen === "join") act("join");
   });
 
+  // Coming back from an update.
+  const params = new URLSearchParams(location.search);
+  if(params.has("u")){
+    history.replaceState(null, "", location.pathname);
+    const after = ls.get("caf_after_update"); ls.del("caf_after_update");
+    if(after && after.screen === "room"){
+      const h = ls.get(LS_HOST), c = ls.get(LS_CLIENT);
+      if(h && h.code) setTimeout(() => act("resume"), 0);
+      else if(c && c.code) setTimeout(() => act("rejoin"), 0);
+    } else if(after){ screen = "settings"; upd.msg = "Updated! You're on version " + VERSION + "."; }
+  }
   // Invite links: ?join=ABCD
-  const q = new URLSearchParams(location.search).get("join");
+  const q = params.get("join");
   if(q && /^[A-Za-z]{4}$/.test(q)){
     drafts.code = q.toUpperCase(); screen = "join";
     history.replaceState(null, "", location.pathname);
