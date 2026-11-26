@@ -393,7 +393,10 @@ const PACKS = {
       "The family's plan to get Karlene to drink vodka in front of her bishop: _.",
       "Hunter went door to door selling _ to buy a new bike.",
       "Hunter crashed another family member's car. This time he blames _.",
-      "Alix's feet are so long she wears _ as shoes."
+      "Alix's feet are so long she wears _ as shoes.",
+      "Jen took one Adderall and started hitting on Taylor with _.",
+      "Strangers keep asking if Taylor and Vince are father and son. The giveaway: _.",
+      "Jen and Stephen share a bed now. Jen's one rule: no _."
     ],
     white: [
       "Funeral potatoes", "Green Jell-O with shredded carrots in it", "Two missionaries on bikes in a rainstorm",
@@ -479,7 +482,13 @@ const PACKS = {
       "Jen's infected piercing",
       "Alix's big, huge, long feet",
       "Hunter crashing another family member's car",
-      "~Teenage Hunter's deep-V shirt that matched his boyfriend's"
+      "~Teenage Hunter's deep-V shirt that matched his boyfriend's",
+      "Jen hitting on Taylor after one Adderall",
+      "Jen's Adderall-powered pickup lines",
+      "Taylor and Vince's matching chicken legs",
+      "Vince and Taylor, the chicken-legged father-son duo (not related)",
+      "Jen and Stephen sharing a bed",
+      "Stephen's silk sheets, ironed by the maid"
     ]
   }
 };
