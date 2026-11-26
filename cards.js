@@ -174,7 +174,7 @@ const PACKS = {
       "A trampoline injury", "Ghost peppers", "Mullet-wearing hockey dads", "A rubber chicken", "The Cha-Cha Slide",
       "An escaped zoo monkey", "A very confident toddler", "Getting my hair caught in the ceiling fan", "Hot sauce in my eye",
       "Pretending to be asleep", "The kid who licks everything", "Grilled cheese at 4 a.m.", "A dead battery on a cold morning",
-      "A dentist with cold hands", "Sitting on a wet bench", "Getting a wedgie", "A really sweaty handshake"
+      "A dentist with cold hands", "Sitting on a wet bench", "Getting a wedgie", "A really sweaty handshake", "Illegal bedtimes"
     ]
   },
 
@@ -341,7 +341,7 @@ const PACKS = {
       "Fogged-up car windows", "Hickeys in the shape of Texas", "A sexy farmer", "Plowing the back forty",
       "Riding the baloney pony", "Getting freaky at the Holiday Inn Express", "A very adult piñata", "A booty-shaking contest",
       "A frisky grandpa", "A buttload of lube", "A naughty elf", "Whatever happens after the kids fall asleep",
-      "Batteries for the nightstand", "A suggestive cucumber", "Waxing everything",
+      "Batteries for the nightstand", "A suggestive cucumber", "Waxing everything", "Thick and meaty", "A Santa hat and nothing else",
       "A “hot yoga” class that's mostly moaning", "A man who knows how to use his hands", "A banana in a condom from health class", "Sex ed taught by a nervous gym teacher", "“The talk”", "Walking in on your parents", "A suspiciously sticky remote", "An adults-only bounce house", "Deep-throating a corn dog", "Licking the beaters", "Thick thighs", "A dad bod with a big package", "A sports bra that's given up", "Free-balling", "Going commando to church", "Sweaty butt cleavage", "Plumber's crack", "Side boob", "A nipple slip at the Super Bowl", "Booty shorts", "A cheeky Brazilian wax", "A hairy chest full of gold chains", "Manscaping", "A sexy lumberjack", "A pool boy named Raúl", "A cougar on the prowl", "A silver fox", "A sugar daddy", "A heart-shaped hot tub", "A vibrating bed in a cheap motel", "Cuffing season", "A summer camp fling", "Spin the bottle", "Seven minutes in heaven", "Truth or dare at a sleepover", "Footsie that went way too far", "A massage with a happy ending", "Breaking the headboard", "Bed springs that need oiling", "A neighbor who can hear everything", "Screaming the wrong name", "Doing it to the Jeopardy! theme", "Kegel exercises", "Thrusting like a jackhammer", "Two pumps and a nap", "Sixty seconds of glory", "A three-hour marathon of passion", "Chocolate body paint", "Sexy feathers", "Sex dice", "Naughty Jenga", "A boudoir photo shoot", "Racy Christmas card photos", "Accidentally posting a nude", "Booty pics on the family iPad", "Sexting your mom by accident", "An eggplant that's way too big", "A very small eggplant", "“Size doesn't matter”", "Cold showers", "A boner at the worst possible time", "Morning glory", "Pitching a tent", "A crusty sock under the bed", "A box of tissues and a locked door", "Some quality alone time", "Late-night Cinemax", "The Victoria's Secret catalog", "A teenage boy's laptop", "Incognito mode", "Clearing the browser history", "A secret Pinterest board of shirtless firefighters", "A cowboy who rides all night", "Saddle sores", "Riding bareback", "Giddy up!", "A thong in the dryer", "A panty raid", "Lacy underwear on a hairy man", "A man in a silk robe", "A van with a mattress in the back", "Steamed-up windows at the drive-in", "Heavy petting", "Rounding second base", "Scoring a home run", "A wild night in Tijuana", "Spring break in Cancún", "A shotgun wedding", "A drunken Vegas wedding", "Getting busy", "Doing the deed", "Knocking boots", "Getting it on", "The beast with two backs", "A tongue that can tie a cherry stem", "The yawn-and-reach move", "The ol' reach-around", "Toe sucking", "A foot fetish", "A naked butt in the window", "Mooning the neighbors", "Streaking at a football game", "Nude beaches full of old men", "Saggy everything", "A wardrobe malfunction", "Accidentally flashing the mailman", "The mailman's package", "The pizza guy from a dirty movie", "Terrible acting in a dirty movie", "Sexy Abraham Lincoln", "A sexy pirate wench", "A nice rack", "Junk in the trunk", "A thicc booty", "A grabbable butt", "Butt-dialing mid-hookup", "Booty sweat", "Twerking for tips", "A stripper pole in the living room", "Dollar bills in my underwear", "Making it rain at the strip club", "A stripper named Destiny", "A stripper with a law degree", "Bachelorette party penis straws", "Penis-shaped pasta", "An anatomically correct snowman", "A carrot that looks like... you know", "Tight pants", "A very visible bulge", "Yoga pants", "Protein, creatine, and Viagra", "Sexual tension at the PTA meeting", "The hot divorced dad at soccer practice", "The hot mom at school pickup", "A very hands-on chiropractor", "A doctor who says “turn and cough”", "Stirrups", "Oysters and bad intentions", "A champagne bubble bath for two", "Rose petals on the bed", "A sexy little nightie", "A mankini", "Boxers with a hole in just the right spot", "A sexy dentist", "Dirty dancing at a wedding", "Lap dance lessons", "Nibbling an earlobe", "Neck kisses", "Whispering sweet nothings", "Moaning “oh, Daddy”", "A bed that collapses mid-act", "A sex tape filmed on an iPad", "Hooking up in a corn maze", "The back row of the movie theater", "Sneaking into the hot tub after hours", "A naughty Mrs. Claus", "Getting lucky on Valentine's Day", "Anniversary sex", "Birthday sex", "Vacation sex", "Quickie before church", "Unbuckling with your teeth", "A belt that won't come off", "Sexy socks", "Sexy Crocs", "A G-string on a grandpa", "Love bites", "Rug burn", "Cuddling naked", "Spontaneous combustion of passion", "A naughty list a mile long", "Sexy time in a tent", "A bearskin rug by the fireplace", "Massage oil that stains everything", "A blindfold and a feather"
     ]
   },
@@ -378,7 +378,22 @@ const PACKS = {
       "What did Karlene find hiding in her closet this time?",
       "Vince's master plan to sneak into Karlene's room: Step 1: _. Step 2: _.",
       "Karlene changed the locks again, so now Vince is trying _.",
-      "What's Vince's code name for sneaking into Karlene's room?"
+      "What's Vince's code name for sneaking into Karlene's room?",
+      "Bishop Taylor just announced from the pulpit that he's better than everyone at _.",
+      "Boni gave the whole congregation the double bird because of _.",
+      "Hunter can dish it out, but he absolutely cannot take _.",
+      "Hunter and Bekah, the perfect parents, would never allow _.",
+      "~Emmaeleigh is 15 but acts like she's 7. Today she _.",
+      "Stephen has never once in his life had to _.",
+      "Hunter refused to eat at Chick-fil-A, then ordered _ after everyone was done.",
+      "Jennifer's new matriarch rule for the whole family: _.",
+      "Jen and Vince have lived at the airport for three weeks, surviving on _.",
+      "Leave Milo in the house for one day and you'll find _.",
+      "Taylor shaved his head again. He says it's because of _.",
+      "The family's plan to get Karlene to drink vodka in front of her bishop: _.",
+      "Hunter went door to door selling _ to buy a new bike.",
+      "Hunter crashed another family member's car. This time he blames _.",
+      "Alix's feet are so long she wears _ as shoes."
     ],
     white: [
       "Funeral potatoes", "Green Jell-O with shredded carrots in it", "Two missionaries on bikes in a rainstorm",
@@ -435,7 +450,36 @@ const PACKS = {
       "Karlene booby-trapping her doorway with Legos",
       "Vince's “we're divorced, not dead” speech",
       "Karlene's ex-husband detector",
-      "Vince oiling the hinges on Karlene's door for a silent entry"
+      "Vince oiling the hinges on Karlene's door for a silent entry",
+      "Bishop Taylor's holier-than-thou face",
+      "Taylor's very important bishop voice",
+      "Boni's double bird to the congregation",
+      "Hunter's cowboy hat (he is not a cowboy)",
+      "Hunter: all hat, no cattle",
+      "Bekah, the real cowboy of the family",
+      "Helicopter parents Hunter and Bekah",
+      "Hunter and Bekah shaming all the other parents",
+      "~Poor Theodore",
+      "~Emmaeleigh following everyone around the house",
+      "~Emmaeleigh's fifth coat of makeup today",
+      "~Emmaeleigh's phone, surgically attached",
+      "Jennifer trying to tie her own shoes",
+      "Jen making it to adulthood by the grace of God",
+      "Stephen's silver spoon",
+      "Stephen's personal maid and chef",
+      "Alix needing everything done exactly her way",
+      "Hunter's Chick-fil-A hunger strike",
+      "Hunter selling Jennifer's half-used lotions door to door",
+      "Jennifer's matriarch power",
+      "Jen and Vince's permanent airport residence",
+      "Milo pooping everywhere",
+      "Taylor's totally optional bald head",
+      "Karlene, a vodka, and her bishop",
+      "Getting called a fatty by Karlene at the movie theater",
+      "Jen's infected piercing",
+      "Alix's big, huge, long feet",
+      "Hunter crashing another family member's car",
+      "~Teenage Hunter's deep-V shirt that matched his boyfriend's"
     ]
   }
 };
