@@ -174,7 +174,7 @@ const PACKS = {
       "A trampoline injury", "Ghost peppers", "Mullet-wearing hockey dads", "A rubber chicken", "The Cha-Cha Slide",
       "An escaped zoo monkey", "A very confident toddler", "Getting my hair caught in the ceiling fan", "Hot sauce in my eye",
       "Pretending to be asleep", "The kid who licks everything", "Grilled cheese at 4 a.m.", "A dead battery on a cold morning",
-      "A dentist with cold hands", "Sitting on a wet bench", "Getting a wedgie", "A really sweaty handshake", "Illegal bedtimes"
+      "A dentist with cold hands", "Sitting on a wet bench", "Getting a wedgie", "A really sweaty handshake", "Illegal bedtimes", "Benjamin Netanyahu"
     ]
   },
 
